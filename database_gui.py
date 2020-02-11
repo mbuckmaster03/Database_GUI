@@ -8,7 +8,7 @@ import pickle
 
 import tkinter as tk
 
-from tkinter import scrolledtext
+from tkinter.scrolledtext import ScrolledText
 
 TITLE_FONT = ("Times New Roman", 24)
 
@@ -19,9 +19,16 @@ class MainMenu(tk.Frame):
         tk.Frame.__init__(self)
         self.lbl_title = tk.Label(text = "Game Library", font = TITLE_FONT)
         self.lbl_title.grid(row = 0, column = 0, sticky = "news")
-        self.btn_add = tk.Button(text = "Add", font = BUTTON_FONT)
+        self.btn_add = tk.Button(text = "Add", font = BOTTOM_FONT)
         self.btn_add.grid(row = 1, column = 0)
-
+        self.btn_add = tk.Button(text = "Edit", font = BOTTOM_FONT)
+        self.btn_add.grid(row = 2, column = 0)
+        self.btn_add = tk.Button(text = "Serach", font = BOTTOM_FONT)
+        self.btn_add.grid(row = 3, column = 0)
+        self.btn_add = tk.Button(text = "Remove", font = BOTTOM_FONT)
+        self.btn_add.grid(row = 4, column = 0)
+        self.btn_add = tk.Button(text = "Save", font = BOTTOM_FONT)
+        self.btn_add.grid(row = 5, column = 0)        
 
 
 #Main
