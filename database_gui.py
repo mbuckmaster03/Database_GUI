@@ -40,13 +40,12 @@ class MainMenu(Screen):
 class AddScreen(Screen):
     def __init__(self):
         Screen.__init__(self)
-        
         self.grid_columnconfigure(0, weight = 1)
         self.grid_columnconfigure(1, weight = 1)  
         self.grid_columnconfigure(2, weight = 1) 
         self.grid_columnconfigure(3, weight = 1)  
         self.grid_columnconfigure(4, weight = 1) 
-        self.grid_rowconfigure(1, weight = 1)  
+
 
         self.lbl_screen_title = tk.Label(self, text = "Add Screen", font = TITLE_FONT)
         self.lbl_screen_title.grid(row = 0, column = 0, columnspan=3, sticky = "new")
@@ -62,9 +61,9 @@ class AddScreen(Screen):
         self.ent_genre.grid(row = 2, column = 1)     
         
         self.lbl_dev = tk.Label(self,text = "Developer: ")
-        self.lbl_dev.grid(row = 3, column = 0,sticky="w")  
+        self.lbl_dev.grid(row = 3, column = 0)  
         self.ent_dev = tk.Entry(self)
-        self.ent_dev.grid(row = 3, column = 1,sticky="e")  
+        self.ent_dev.grid(row = 3, column = 1)  
         
         self.lbl_pub = tk.Label(self, text = "Publisher: ")
         self.lbl_pub.grid(row = 4, column = 0)  
@@ -76,8 +75,7 @@ class AddScreen(Screen):
         self.ent_platform = tk.Entry(self)
         self.ent_platform.grid(row = 5, column = 1)          
         
-        self.lbl_release = tk.Label(self,text = """  Release 
-        Date:        """, )
+        self.lbl_release = tk.Label(self,text = "  Release Date: ")
         self.lbl_release.grid(row = 1, column = 2)  
         self.ent_release = tk.Entry(self)
         self.ent_release.grid(row = 1, column = 3)               
@@ -92,9 +90,8 @@ class AddScreen(Screen):
         self.ent_price = tk.Entry(self)
         self.ent_price.grid(row = 3, column = 3)
         
-        self.lbl_purchase = tk.Label(self,text = """  Purchase 
-        Date:         """)
-        self.lbl_purchase.grid(row = 4, column = 2,sticky="news")  
+        self.lbl_purchase = tk.Label(self,text ="  Purchase Date: ")
+        self.lbl_purchase.grid(row = 4, column = 2)  
         self.ent_purchase = tk.Entry(self)
         self.ent_purchase.grid(row = 4, column = 3)
         
@@ -256,6 +253,19 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("Game Lib")
     root.geometry("500x500")
+    screens = [MainMenu(),AddScreen(),EditScreen(),SearchScreen(), RemoveScreen(), SaveScreen()]
+    screens[0].grid(row = 0, column = 0, sticky = "news")
+    screens[1].grid(row = 0, column = 0, sticky = "news")
+    screens[2].grid(row = 0, column = 0, sticky = "news")
+    screens[3].grid(row = 0, column = 0, sticky = "news") 
+    screens[4].grid(row = 0, column = 0, sticky = "news")
+    screens[5].grid(row = 0, column = 0, sticky = "news")
+    screens[1].tkraise()
+    root.grid_columnconfigure(0, weight = 1)
+    root.grid_rowconfigure(0, weight = 1)
+  
+    root.mainloop()
+
     #main_menu = MainMenu()
     #main_menu.grid(row = 0, column = 0)
     #search_screen = SearchScreen()
@@ -266,10 +276,5 @@ if __name__ == "__main__":
     #edit_screen.grid(row = 0, column = 0) 
     #remove_screen = RemoveScreen()
     #remove_screen.grid(row = 0, column = 0)       
-    save_screen = SaveScreen()
-    save_screen.grid(row = 0, column = 0)       
-    root.grid_columnconfigure(0, weight = 1)
-    root.grid_rowconfigure(0, weight = 1)
-  
-    root.mainloop()
-
+    #save_screen = SaveScreen()
+    #save_screen.grid(row = 0, column = 0)       

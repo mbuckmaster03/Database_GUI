@@ -8,9 +8,9 @@ import tkinter as tk
 class App(tk.Frame):
     def __init__(self):
         tk.Frame.__init__(self)
-        self.btn_back = tk.Button(text = "Back")
+        self.btn_back = tk.Button(self, text = "Back")
         self.btn_back.grid(row = 0, column = 0)
-        self.btn_back = tk.Button(text = "Frontttttttttttt")
+        self.btn_back = tk.Button(self, text = "Frontttttttttttt")
         self.btn_back.grid(row = 1, column = 0)
         
         self.grid_columnconfigure(0, weight = 1)
