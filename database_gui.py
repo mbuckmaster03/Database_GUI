@@ -20,36 +20,76 @@ class Screen(tk.Frame):
     
     def __init__(self):
         tk.Frame.__init__(self)    
+        
+    def switch_frame():
+        screens[Screen.current].tkraise()    
 
 class MainMenu(Screen):
     def __init__(self):
         Screen.__init__(self)
         self.lbl_title = tk.Label(self, text = "Game Library", font = TITLE_FONT)
-        self.lbl_title.grid(row = 0, column = 0, sticky = "news")
-        self.btn_add = tk.Button(self, text = "Add", font = BOTTOM_FONT)
+        self.lbl_title.grid(row = 0, column = 0)
+        self.btn_add = tk.Button(self, text = "Add", font = BOTTOM_FONT,command=self.go_add)
         self.btn_add.grid(row = 1, column = 0)
-        self.btn_edit = tk.Button(self, text = "Edit", font = BOTTOM_FONT)
+        self.btn_edit = tk.Button(self, text = "Edit", font = BOTTOM_FONT,command=self.go_edit)
         self.btn_edit.grid(row = 2, column = 0)
-        self.btn_search = tk.Button(self, text = "Serach", font = BOTTOM_FONT)
+        self.btn_search = tk.Button(self, text = "Serach", font = BOTTOM_FONT,command=self.go_search)
         self.btn_search.grid(row = 3, column = 0)
-        self.btn_remove = tk.Button(self, text = "Remove", font = BOTTOM_FONT)
+        self.btn_remove = tk.Button(self, text = "Remove", font = BOTTOM_FONT,command=self.go_remove)
         self.btn_remove.grid(row = 4, column = 0)
-        self.btn_save = tk.Button(self, text = "Save", font = BOTTOM_FONT)
+        self.btn_save = tk.Button(self, text = "Save", font = BOTTOM_FONT,command=self.go_save)
         self.btn_save.grid(row = 5, column = 0)   
+        
+        self.grid_columnconfigure(0, weight = 1)
+        self.grid_columnconfigure(1, weight = 1)  
+        self.grid_columnconfigure(2, weight = 1)
+        
+    def go_add(self):
+        Screen.current = 1
+        Screen.switch_frame()
+        
+    def go_edit(self):
+
+        pop_up = tk.Tk()
+        pop_up.title("Edit Selection")
+        frm_edit_select = EditScreen(pop_up)
+        frm_edit_select.grid(row = 0, column = 0)
+        
+    def go_search(self):
+        Screen.current = 2
+        Screen.switch_frame()        
+        
+    def go_remove(self):
+        Screen.current = 5
+        Screen.switch_frame()    
+        
+    def go_save(self):
+        Screen.current = 7
+        Screen.switch_frame()  
 
 class AddScreen(Screen):
     def __init__(self):
         Screen.__init__(self)
+        
+        #Configure
         self.grid_columnconfigure(0, weight = 1)
         self.grid_columnconfigure(1, weight = 1)  
         self.grid_columnconfigure(2, weight = 1) 
         self.grid_columnconfigure(3, weight = 1)  
         self.grid_columnconfigure(4, weight = 1) 
-
-
+        self.grid_rowconfigure(0, weight = 1)
+        self.grid_rowconfigure(1, weight = 1)  
+        self.grid_rowconfigure(2, weight = 1)
+        self.grid_rowconfigure(3, weight = 1) 
+        self.grid_rowconfigure(4, weight = 1)  
+        self.grid_rowconfigure(5, weight = 1)
+        self.grid_rowconfigure(6, weight = 1)   
+        
+        #Title
         self.lbl_screen_title = tk.Label(self, text = "Add Screen", font = TITLE_FONT)
         self.lbl_screen_title.grid(row = 0, column = 0, columnspan=3, sticky = "new")
         
+        #Input
         self.lbl_title = tk.Label(self,text = "Title: ")
         self.lbl_title.grid(row = 1, column = 0)
         self.ent_title = tk.Entry(self)
@@ -95,6 +135,7 @@ class AddScreen(Screen):
         self.ent_purchase = tk.Entry(self)
         self.ent_purchase.grid(row = 4, column = 3)
         
+        #Drop Down
         self.lbl_mode = tk.Label(self,text = "Mode: ")
         self.lbl_mode.grid(row = 5, column = 2)          
         self.options = ["Singleplayer", "Multiplayer"] 
@@ -106,40 +147,67 @@ class AddScreen(Screen):
         self.cbx_beat = tk.Checkbutton(self, text = "Beaten?")
         self.cbx_beat.grid(row = 6, column = 2, sticky = "ws")
         
+        #Notes
         self.lbl_notes = tk.Label(self,text = "Notes: ")
         self.lbl_notes.grid(row = 6, column = 1,sticky="ws")                
         self.scr_notes = ScrolledText(self,width=59,height=12)
         self.scr_notes.grid(row = 7, column = 0, columnspan = 4,sticky="news")    
         
-        
-        self.btn_back = tk.Button(self,text = "Back", font = BOTTOM_FONT)
+        #Buttons
+        self.btn_back = tk.Button(self,text = "Back", font = BOTTOM_FONT,command=self.go_back)
         self.btn_back.grid(row = 8, column = 0, sticky = "news")
-        self.btn_clear = tk.Button(self,text = "Reset", font = BOTTOM_FONT)
+        self.btn_clear = tk.Button(self,text = "Reset", font = BOTTOM_FONT,command=self.reset)
         self.btn_clear.grid(row = 8, column = 1, sticky = "news")
-        self.btn_submit = tk.Button(self,text = "Confirm", font = BOTTOM_FONT)
-        self.btn_submit.grid(row = 8, column = 3, sticky = "news")               
+        self.btn_submit = tk.Button(self,text = "Confirm", font = BOTTOM_FONT,command=self.go_confirm)
+        self.btn_submit.grid(row = 8, column = 3, sticky = "news")     
         
-class EditScreen(Screen):
-    def __init__(self):
-        Screen.__init__(self)    
+    def go_back(self):
+        Screen.current = 0
+        Screen.switch_frame() 
+        
+    def reset(self):
+        print("Reset")    
+        
+    def go_confirm(self):
+        Screen.current = 0
+        Screen.switch_frame()        
+        
+
+class EditScreen(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self, master = parent)
+        self.parent = parent
+        
+        self.grid_rowconfigure(0, weight = 1)
+        self.grid_rowconfigure(1, weight = 1)  
+        self.grid_rowconfigure(2, weight = 1)        
         
         self.lbl_edit_question = tk.Label(self,text = "Which Game Would You Like To Edit? ", font = BOTTOM_FONT)
-        self.lbl_edit_question .grid(row = 0, column = 0)  
-        self.ent_edit_question  = tk.Entry(self)
-        self.ent_edit_question .grid(row = 1, column = 0)   
+        self.lbl_edit_question.grid(row = 0, column = 0, columnspan = 2) 
         
+        self.ent_edit_question  = tk.Entry(self)
+        self.ent_edit_question.grid(row = 1, column = 0, columnspan = 2) 
+        
+        self.btn_edit_cancel = tk.Button(self, text = "Cancel", command = self.cancel)
+        self.btn_edit_cancel.grid(row = 2, column = 0) 
+        self.btn_edit_ok = tk.Button(self, text = "Ok")
+        self.btn_edit_ok.grid(row = 2, column = 1) 
+                
+    def cancel(self):
+        self.parent.destroy()
         
 class SearchScreen(Screen):
     def __init__(self):
         Screen.__init__(self)
         
+        #Configure
         self.grid_columnconfigure(0, weight = 1)
         self.grid_columnconfigure(1, weight = 1)  
         self.grid_columnconfigure(2, weight = 1) 
         self.grid_columnconfigure(3, weight = 1)
         self.grid_rowconfigure(5,weight=1)
 
-        
+        #Title
         self.lbl_title = tk.Label(self,text = "Search", font = TITLE_FONT)
         self.lbl_title.grid(row = 0, column = 0, columnspan=3, sticky = "news") 
         
@@ -160,22 +228,31 @@ class SearchScreen(Screen):
         self.ent_srch_for = tk.Entry(self)
         self.ent_srch_for.grid(row = 4, column = 0, sticky = "nw") 
         
-        #Buttons
-        self.btn_back = tk.Button(self,text = "Back", font = BOTTOM_FONT)
-        self.btn_back.grid(row = 6, column = 0, sticky = "news")
-        self.btn_clear = tk.Button(self,text = "Clear", font = BOTTOM_FONT)
-        self.btn_clear.grid(row = 6, column = 1, sticky = "news")
-        self.btn_submit = tk.Button(self,text = "Submit", font = BOTTOM_FONT)
-        self.btn_submit.grid(row = 6, column = 2, sticky = "news")        
-        
         #Scroll
         self.scr_print = ScrolledText(self,width=59,height=19)
         self.scr_print.grid(row = 5, column = 0, columnspan = 3,sticky="news")
         
         #Check Boxes
         checkbox_filter = CheckboxFilter(self)
-        checkbox_filter.grid(row = 2, column = 1, rowspan = 3, columnspan = 2, sticky = "news")
+        checkbox_filter.grid(row = 2, column = 1, rowspan = 3, columnspan = 2, sticky = "news")        
         
+        #Buttons
+        self.btn_back = tk.Button(self,text = "Back", font = BOTTOM_FONT,command=self.go_back)
+        self.btn_back.grid(row = 6, column = 0, sticky = "news")
+        self.btn_clear = tk.Button(self,text = "Clear", font = BOTTOM_FONT,command=self.clear)
+        self.btn_clear.grid(row = 6, column = 1, sticky = "news")
+        self.btn_submit = tk.Button(self,text = "Submit", font = BOTTOM_FONT,command=self.submit)
+        self.btn_submit.grid(row = 6, column = 2, sticky = "news")        
+        
+    def go_back(self):
+        Screen.current = 0
+        Screen.switch_frame() 
+
+    def clear(self):
+        print("Cleared")    
+
+    def submit(self):
+        print("Submited")        
         
 class CheckboxFilter(tk.Frame):
     def __init__(self, parent ):
@@ -230,6 +307,7 @@ class RemoveScreen(Screen):
         self.ent_genre = tk.Entry(self)
         self.ent_genre.grid(row = 1, column = 0)   
         
+        #Buttons
         self.btn_clear = tk.Button(self,text = "Cancel", font = BOTTOM_FONT)
         self.btn_clear.grid(row = 3, column = 0)
         self.btn_submit = tk.Button(self,text = "Confirm", font = BOTTOM_FONT)
@@ -253,28 +331,13 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("Game Lib")
     root.geometry("500x500")
-    screens = [MainMenu(),AddScreen(),EditScreen(),SearchScreen(), RemoveScreen(), SaveScreen()]
+    root.grid_columnconfigure(0, weight = 1)
+    root.grid_rowconfigure(0, weight = 1)    
+    screens = [MainMenu(),AddScreen(),SearchScreen()]
     screens[0].grid(row = 0, column = 0, sticky = "news")
     screens[1].grid(row = 0, column = 0, sticky = "news")
     screens[2].grid(row = 0, column = 0, sticky = "news")
-    screens[3].grid(row = 0, column = 0, sticky = "news") 
-    screens[4].grid(row = 0, column = 0, sticky = "news")
-    screens[5].grid(row = 0, column = 0, sticky = "news")
-    screens[1].tkraise()
-    root.grid_columnconfigure(0, weight = 1)
-    root.grid_rowconfigure(0, weight = 1)
-  
+    screens[0].tkraise()
+
     root.mainloop()
 
-    #main_menu = MainMenu()
-    #main_menu.grid(row = 0, column = 0)
-    #search_screen = SearchScreen()
-    #search_screen.grid(row = 0, column = 0)
-    #add_screen = AddScreen()Screen
-    #add_screen.grid(row = 0, column = 0)    
-    #edit_screen = EditScreen()
-    #edit_screen.grid(row = 0, column = 0) 
-    #remove_screen = RemoveScreen()
-    #remove_screen.grid(row = 0, column = 0)       
-    #save_screen = SaveScreen()
-    #save_screen.grid(row = 0, column = 0)       
