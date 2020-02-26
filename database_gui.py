@@ -52,7 +52,7 @@ class MainMenu(Screen):
 
         pop_up = tk.Tk()
         pop_up.title("Edit Selection")
-        frm_edit_select = EditScreen(pop_up)
+        frm_edit_select = EditSelect(pop_up)
         frm_edit_select.grid(row = 0, column = 0)
         
     def go_search(self):
@@ -171,30 +171,180 @@ class AddScreen(Screen):
     def go_confirm(self):
         Screen.current = 0
         Screen.switch_frame()        
-        
 
-class EditScreen(tk.Frame):
-    def __init__(self, parent):
+class EditSelect(tk.Frame):
+    def __init__(self,parent):
         tk.Frame.__init__(self, master = parent)
         self.parent = parent
-        
+
         self.grid_rowconfigure(0, weight = 1)
         self.grid_rowconfigure(1, weight = 1)  
         self.grid_rowconfigure(2, weight = 1)        
         
         self.lbl_edit_question = tk.Label(self,text = "Which Game Would You Like To Edit? ", font = BOTTOM_FONT)
-        self.lbl_edit_question.grid(row = 0, column = 0, columnspan = 2) 
+        self.lbl_edit_question.grid(row = 0, column = 0, columnspan = 3) 
         
-        self.ent_edit_question  = tk.Entry(self)
-        self.ent_edit_question.grid(row = 1, column = 0, columnspan = 2) 
+        self.lbl_mode = tk.Label(self,text = "Game List: ")
+        self.lbl_mode.grid(row = 1, column = 0, sticky = "news") 
+        self.options = ["Select a Title"]
+        for key in games.keys():
+            self.options.append(games[key][0])
+        self.tkvar = tk.StringVar(self)
+        self.tkvar.set(self.options[0])        
+        self.menu = tk.OptionMenu(self, self.tkvar,*self.options)
+        self.menu.grid(row=1,column=1, sticky = "wesn")        
         
         self.btn_edit_cancel = tk.Button(self, text = "Cancel", command = self.cancel)
         self.btn_edit_cancel.grid(row = 2, column = 0) 
-        self.btn_edit_ok = tk.Button(self, text = "Ok")
+        self.btn_edit_ok = tk.Button(self, text = "Ok", command = self.go_edit)
         self.btn_edit_ok.grid(row = 2, column = 1) 
                 
     def cancel(self):
         self.parent.destroy()
+        
+    def go_edit(self): 
+        Screen.current = 3
+        
+        if self.tkvar.get() == self.options[0]:
+            pass
+        else:
+            for i in range(len(self.options)):
+                if self.tkvar.get() == self.options[i]:
+                    screens[Screen.current].edit_key = i
+                    screens[Screen.current].update()
+                    break
+            Screen.switch_frame()
+            self.parent.destroy()    
+        
+        
+class EditScreen(tk.Frame):
+    def __init__(self):
+        Screen.__init__(self)
+        self.edit_key = 0
+        
+        #Configure
+        self.grid_columnconfigure(0, weight = 1)
+        self.grid_columnconfigure(1, weight = 1)  
+        self.grid_columnconfigure(2, weight = 1) 
+        self.grid_columnconfigure(3, weight = 1)  
+        self.grid_columnconfigure(4, weight = 1) 
+        self.grid_rowconfigure(0, weight = 1)
+        self.grid_rowconfigure(1, weight = 1)  
+        self.grid_rowconfigure(2, weight = 1)
+        self.grid_rowconfigure(3, weight = 1) 
+        self.grid_rowconfigure(4, weight = 1)  
+        self.grid_rowconfigure(5, weight = 1)
+        self.grid_rowconfigure(6, weight = 1)   
+        
+        #Title
+        self.lbl_screen_title = tk.Label(self, text = "Edit Screen", font = TITLE_FONT)
+        self.lbl_screen_title.grid(row = 0, column = 0, columnspan=3, sticky = "new")
+        
+        #Input
+        self.lbl_title = tk.Label(self,text = "Title: ")
+        self.lbl_title.grid(row = 1, column = 0)
+        self.ent_title = tk.Entry(self)
+        self.ent_title.grid(row = 1, column = 1)
+       
+        self.lbl_genre = tk.Label(self,text = "Genre: ")
+        self.lbl_genre.grid(row = 2, column = 0)  
+        self.ent_genre = tk.Entry(self)
+        self.ent_genre.grid(row = 2, column = 1)     
+        
+        self.lbl_dev = tk.Label(self,text = "Developer: ")
+        self.lbl_dev.grid(row = 3, column = 0)  
+        self.ent_dev = tk.Entry(self)
+        self.ent_dev.grid(row = 3, column = 1)  
+        
+        self.lbl_pub = tk.Label(self, text = "Publisher: ")
+        self.lbl_pub.grid(row = 4, column = 0)  
+        self.ent_pub = tk.Entry(self)
+        self.ent_pub.grid(row = 4, column = 1)           
+        
+        self.lbl_platform = tk.Label(self,text = "Platform: ")
+        self.lbl_platform.grid(row = 5, column = 0)  
+        self.ent_platform = tk.Entry(self)
+        self.ent_platform.grid(row = 5, column = 1)          
+        
+        self.lbl_release = tk.Label(self,text = "  Release Date: ")
+        self.lbl_release.grid(row = 1, column = 2)  
+        self.ent_release = tk.Entry(self)
+        self.ent_release.grid(row = 1, column = 3)               
+        
+        self.lbl_rate = tk.Label(self,text = "Rating: ")
+        self.lbl_rate.grid(row = 2, column = 2)  
+        self.ent_rate = tk.Entry(self)
+        self.ent_rate.grid(row = 2, column = 3) 
+        
+        self.lbl_price = tk.Label(self,text = "Price: ")
+        self.lbl_price.grid(row = 3, column = 2)  
+        self.ent_price = tk.Entry(self)
+        self.ent_price.grid(row = 3, column = 3)
+        
+        self.lbl_purchase = tk.Label(self,text ="  Purchase Date: ")
+        self.lbl_purchase.grid(row = 4, column = 2)  
+        self.ent_purchase = tk.Entry(self)
+        self.ent_purchase.grid(row = 4, column = 3)
+        
+        #Drop Down
+        self.lbl_mode = tk.Label(self,text = "Mode: ")
+        self.lbl_mode.grid(row = 5, column = 2)          
+        self.options = ["Singleplayer", "Multiplayer"] 
+        self.dbx_mode = tk.StringVar(self)
+        self.dbx_mode.set(self.options[0])
+        self.menu = tk.OptionMenu(self, self.dbx_mode,*self.options)
+        self.menu.grid(row=5,column=3,sticky="wns")
+        
+        self.cbx_beat = tk.Checkbutton(self, text = "Beaten?")
+        self.cbx_beat.grid(row = 6, column = 2, sticky = "ws")
+        
+        #Notes
+        self.lbl_notes = tk.Label(self,text = "Notes: ")
+        self.lbl_notes.grid(row = 6, column = 1,sticky="ws")                
+        self.scr_notes = ScrolledText(self,width=59,height=12)
+        self.scr_notes.grid(row = 7, column = 0, columnspan = 4,sticky="news")    
+        
+        #Buttons
+        self.btn_back = tk.Button(self,text = "Back", font = BOTTOM_FONT,command=self.go_back)
+        self.btn_back.grid(row = 8, column = 0, sticky = "news")
+        self.btn_clear = tk.Button(self,text = "Reset", font = BOTTOM_FONT,command=self.reset)
+        self.btn_clear.grid(row = 8, column = 1, sticky = "news")
+        self.btn_submit = tk.Button(self,text = "Confirm", font = BOTTOM_FONT,command=self.go_confirm)
+        self.btn_submit.grid(row = 8, column = 3, sticky = "news")     
+        
+    def go_back(self):
+        Screen.current = 0
+        Screen.switch_frame() 
+        
+    def reset(self):
+        print("Reset")    
+        
+    def go_confirm(self):
+        Screen.current = 0
+        Screen.switch_frame()      
+        
+    
+        #Updateent_title
+    def update(self):
+        entry = games[self.edit_key]
+        self.ent_title.delete(0, "end")
+        self.ent_title.insert(0, entry[0])
+        self.ent_genre.delete(0, "end")
+        self.ent_genre.insert(0, entry[1])
+        self.ent_dev.delete(0, "end")
+        self.ent_dev.insert(0, entry[2])
+        self.ent_pub.delete(0, "end")
+        self.ent_pub.insert(0, entry[3])     
+        self.ent_platform.delete(0, "end")
+        self.ent_platform.insert(0, entry[4])
+        self.ent_release.delete(0, "end")
+        self.ent_release.insert(0, entry[5])
+        self.ent_rate.delete(0, "end")
+        self.ent_rate.insert(0, entry[6])        
+        self.ent_price.delete(0, "end")
+        self.ent_price.insert(0, entry[8])
+        self.ent_purchase.delete(0, "end")
+        self.ent_purchase.insert(0, entry[10])             
         
 class SearchScreen(Screen):
     def __init__(self):
@@ -329,14 +479,15 @@ if __name__ == "__main__":
     games = pickle.load(data_file)
     data_file.close()
     root = tk.Tk()
-    root.title("Game Lib")
+    root.title("Game Lib")_date
     root.geometry("500x500")
     root.grid_columnconfigure(0, weight = 1)
     root.grid_rowconfigure(0, weight = 1)    
-    screens = [MainMenu(),AddScreen(),SearchScreen()]
+    screens = [MainMenu(),AddScreen(),SearchScreen(),EditScreen()]
     screens[0].grid(row = 0, column = 0, sticky = "news")
     screens[1].grid(row = 0, column = 0, sticky = "news")
     screens[2].grid(row = 0, column = 0, sticky = "news")
+    screens[3].grid(row = 0, column = 0, sticky = "news")
     screens[0].tkraise()
 
     root.mainloop()
