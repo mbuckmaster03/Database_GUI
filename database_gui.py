@@ -309,7 +309,7 @@ class EditScreen(tk.Frame):
         self.btn_back.grid(row = 8, column = 0, sticky = "news")
         self.btn_clear = tk.Button(self,text = "Reset", font = BOTTOM_FONT,command=self.reset)
         self.btn_clear.grid(row = 8, column = 1, sticky = "news")
-        self.btn_submit = tk.Button(self,text = "Confirm", font = BOTTOM_FONT,command=self.go_confirm)
+        self.btn_submit = tk.Button(self,text = "Confirm", font = BOTTOM_FONT,command=self.confirm)
         self.btn_submit.grid(row = 8, column = 3, sticky = "news")     
         
     def go_back(self):
@@ -319,12 +319,28 @@ class EditScreen(tk.Frame):
     def reset(self):
         print("Reset")    
         
-    def go_confirm(self):
-        Screen.current = 0
-        Screen.switch_frame()      
+    def confirm(self):
+        Screen.current = 0 
+        Screen.switch_frame()
+        entry = []
+        entry.append(self.ent_title.get())
+        entry.append(self.ent_genre.get())
+        entry.append(self.ent_dev.get())
+        entry.append(self.ent_pub.get())
+        entry.append(self.ent_platform.get())
+        entry.append(self.ent_release.get())
+        entry.append(self.ent_rate.get())
+        entry.append(self.dbx_mode.get())
+        entry.append(self.ent_price.get())
+        entry.append("")
+        entry.append(self.ent_purchase.get())
+        entry.append(self.scr_notes.get(0.0, "end"))
+        games[self.edit_key] = entry
         
     
-        #Updateent_title
+        
+    
+        #Update
     def update(self):
         entry = games[self.edit_key]
         self.ent_title.delete(0, "end")
@@ -479,7 +495,7 @@ if __name__ == "__main__":
     games = pickle.load(data_file)
     data_file.close()
     root = tk.Tk()
-    root.title("Game Lib")_date
+    root.title("Game Lib")
     root.geometry("500x500")
     root.grid_columnconfigure(0, weight = 1)
     root.grid_rowconfigure(0, weight = 1)    
