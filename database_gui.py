@@ -46,7 +46,10 @@ class MainMenu(Screen):
         
     def go_add(self):
         Screen.current = 1
+        screens[Screen.current].clear()
         Screen.switch_frame()
+        
+
         
     def go_edit(self):
 
@@ -60,12 +63,24 @@ class MainMenu(Screen):
         Screen.switch_frame()        
         
     def go_remove(self):
-        Screen.current = 5
+        Screen.current = 4
         Screen.switch_frame()    
         
     def go_save(self):
-        Screen.current = 7
+        Screen.current = 5
         Screen.switch_frame()  
+        
+    def clear(self):
+        self.ent_title.delete(0, "end")
+        self.ent_genre.delete(0, "end")
+        self.ent_dev.delete(0, "end")
+        self.ent_pub.delete(0, "end")
+        self.ent_platform.delete(0, "end")
+        self.ent_release.delete(0, "end")
+        self.ent_rate.delete(0, "end") 
+        self.ent_price.delete(0, "end")
+        self.ent_purchase.delete(0, "end")            
+
 
 class AddScreen(Screen):
     def __init__(self):
@@ -156,21 +171,32 @@ class AddScreen(Screen):
         #Buttons
         self.btn_back = tk.Button(self,text = "Back", font = BOTTOM_FONT,command=self.go_back)
         self.btn_back.grid(row = 8, column = 0, sticky = "news")
-        self.btn_clear = tk.Button(self,text = "Reset", font = BOTTOM_FONT,command=self.reset)
+        self.btn_clear = tk.Button(self,text = "Clear", font = BOTTOM_FONT,command=self.clear)
         self.btn_clear.grid(row = 8, column = 1, sticky = "news")
         self.btn_submit = tk.Button(self,text = "Confirm", font = BOTTOM_FONT,command=self.go_confirm)
         self.btn_submit.grid(row = 8, column = 3, sticky = "news")     
         
     def go_back(self):
         Screen.current = 0
-        Screen.switch_frame() 
+        Screen.switch_frame()
         
-    def reset(self):
-        print("Reset")    
+        
+    def clear(self):
+        self.ent_title.delete(0, "end")
+        self.ent_genre.delete(0, "end")
+        self.ent_dev.delete(0, "end")
+        self.ent_pub.delete(0, "end")
+        self.ent_platform.delete(0, "end")
+        self.ent_release.delete(0, "end")
+        self.ent_rate.delete(0, "end") 
+        self.ent_price.delete(0, "end")
+        self.ent_purchase.delete(0, "end")            
+            
         
     def go_confirm(self):
         Screen.current = 0
         Screen.switch_frame()        
+        
 
 class EditSelect(tk.Frame):
     def __init__(self,parent):
@@ -469,15 +495,27 @@ class RemoveScreen(Screen):
 
         
         self.lbl_genre = tk.Label(self,text = "Which Game Would You Like To Remove? ", font = BOTTOM_FONT)
-        self.lbl_genre.grid(row = 0, column = 0)  
-        self.ent_genre = tk.Entry(self)
-        self.ent_genre.grid(row = 1, column = 0)   
+        self.lbl_genre.grid(row = 0, column = 0,columnspan=2)  
+
+        self.lbl_mode = tk.Label(self,text = "Game List: ")
+        self.lbl_mode.grid(row = 1, column = 0, sticky = "news") 
+        self.options = ["Select a Title"]
+        for key in games.keys():
+            self.options.append(games[key][0])
+        self.tkvar = tk.StringVar(self)
+        self.tkvar.set(self.options[0])        
+        self.menu = tk.OptionMenu(self, self.tkvar,*self.options)
+        self.menu.grid(row=1,column=1, sticky = "wesn")         
         
         #Buttons
-        self.btn_clear = tk.Button(self,text = "Cancel", font = BOTTOM_FONT)
-        self.btn_clear.grid(row = 3, column = 0)
+        self.btn_clear = tk.Button(self,text = "Cancel", font = BOTTOM_FONT, command = self.go_back)
+        self.btn_clear.grid(row = 2, column = 0)
         self.btn_submit = tk.Button(self,text = "Confirm", font = BOTTOM_FONT)
-        self.btn_submit.grid(row = 2, column = 0)            
+        self.btn_submit.grid(row = 2, column = 1)    
+        
+    def go_back(self):
+        Screen.current = 0
+        Screen.switch_frame()         
         
 class SaveScreen(Screen):
     def __init__(self):
@@ -485,8 +523,12 @@ class SaveScreen(Screen):
         
         self.lbl_save = tk.Label(self,text = "Library Saved ", font = BOTTOM_FONT)
         self.lbl_save.grid(row = 0, column = 0)
-        self.btn_save = tk.Button(self,text = "Ok", font = BOTTOM_FONT)
+        self.btn_save = tk.Button(self,text = "Ok", font = BOTTOM_FONT,command=self.go_back)
         self.btn_save.grid(row = 2, column = 0)          
+       
+    def go_back(self):
+        Screen.current = 0
+        Screen.switch_frame()        
        
 #Main
 if __name__ == "__main__":
@@ -499,11 +541,13 @@ if __name__ == "__main__":
     root.geometry("500x500")
     root.grid_columnconfigure(0, weight = 1)
     root.grid_rowconfigure(0, weight = 1)    
-    screens = [MainMenu(),AddScreen(),SearchScreen(),EditScreen()]
+    screens = [MainMenu(),AddScreen(),SearchScreen(),EditScreen(), RemoveScreen(),SaveScreen()]
     screens[0].grid(row = 0, column = 0, sticky = "news")
     screens[1].grid(row = 0, column = 0, sticky = "news")
     screens[2].grid(row = 0, column = 0, sticky = "news")
     screens[3].grid(row = 0, column = 0, sticky = "news")
+    screens[4].grid(row = 0, column = 0, sticky = "news")
+    screens[5].grid(row = 0, column = 0, sticky = "news")    
     screens[0].tkraise()
 
     root.mainloop()
