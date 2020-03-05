@@ -10,6 +10,8 @@ import tkinter as tk
 
 from tkinter.scrolledtext import ScrolledText
 
+from tkinter import messagebox as mb
+
 TITLE_FONT = ("Times New Roman", 24)
 
 BOTTOM_FONT = ("Arial", 15)
@@ -195,8 +197,22 @@ class AddScreen(Screen):
         
     def go_confirm(self):
         Screen.current = 0
-        Screen.switch_frame()        
-        
+        Screen.switch_frame()  
+        entry = []
+        entry.append(self.ent_title.get())
+        entry.append(self.ent_genre.get())
+        entry.append(self.ent_dev.get())
+        entry.append(self.ent_pub.get())
+        entry.append(self.ent_platform.get())
+        entry.append(self.ent_release.get())
+        entry.append(self.ent_rate.get())
+        entry.append(self.dbx_mode.get())
+        entry.append(self.ent_price.get())
+        entry.append("")
+        entry.append(self.ent_purchase.get())
+        entry.append(self.scr_notes.get(0.0, "end"))
+        games[len(games)+1] = entry
+        mb.showinfo(message = "Entry has been added")
 
 class EditSelect(tk.Frame):
     def __init__(self,parent):
@@ -425,66 +441,147 @@ class SearchScreen(Screen):
         self.scr_print.grid(row = 5, column = 0, columnspan = 3,sticky="news")
         
         #Check Boxes
-        checkbox_filter = CheckboxFilter(self)
-        checkbox_filter.grid(row = 2, column = 1, rowspan = 3, columnspan = 2, sticky = "news")        
+        self.checkbox_filter = CheckboxFilter(self)
+        self.checkbox_filter.grid(row = 2, column = 1, rowspan = 3, columnspan = 2, sticky = "news")        
         
         #Buttons
         self.btn_back = tk.Button(self,text = "Back", font = BOTTOM_FONT,command=self.go_back)
         self.btn_back.grid(row = 6, column = 0, sticky = "news")
         self.btn_clear = tk.Button(self,text = "Clear", font = BOTTOM_FONT,command=self.clear)
         self.btn_clear.grid(row = 6, column = 1, sticky = "news")
-        self.btn_submit = tk.Button(self,text = "Submit", font = BOTTOM_FONT,command=self.submit)
-        self.btn_submit.grid(row = 6, column = 2, sticky = "news")        
+        self.btn_submit = tk.Button(self,text = "Submit", font = BOTTOM_FONT,command=self.submit_search)
+        self.btn_submit.grid(row = 6, column = 2, sticky = "news") 
+        
+        for key in games.keys():
+            entry = games[key]
+            self.filter_print(entry)
         
     def go_back(self):
         Screen.current = 0
         Screen.switch_frame() 
 
     def clear(self):
-        print("Cleared")    
-
-    def submit(self):
-        print("Submited")        
-        
+        self.checkbox_filter.title_filter.set(False)  
+        self.checkbox_filter.genre_filter.set(False) 
+        self.checkbox_filter.dev_filter.set(False) 
+        self.checkbox_filter.pub_filter.set(False) 
+        self.checkbox_filter.platform_filter.set(False) 
+        self.checkbox_filter.release_filter.set(False)
+        self.checkbox_filter.rate_filter.set(False)
+        self.checkbox_filter.multi_filter.set(False) 
+        self.checkbox_filter.price_filter.set(False)  
+        self.checkbox_filter.beat_filter.set(False) 
+        self.checkbox_filter.purchase_filter.set(False) 
+        self.checkbox_filter.note_filter.set(False) 
+             
+    def filter_print(self, entry):
+        if self.checkbox_filter.title_filter.get() == True:
+            msg = entry[0]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.genre_filter.get() == True:
+            msg = entry[1]+"\n"
+            self.scr_print.insert("insert", msg)   
+        if self.checkbox_filter.dev_filter.get() == True:
+            msg = entry[2]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.pub_filter.get() == True:
+            msg = entry[3]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.platform_filter.get() == True:
+            msg = entry[4]+"\n"
+            self.scr_print.insert("insert", msg)   
+        if self.checkbox_filter.release_filter.get() == True:
+            msg = entry[5]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.rate_filter.get() == True:
+            msg = entry[6]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.multi_filter.get() == True:
+            msg = entry[7]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.price_filter.get() == True:
+            msg = entry[8]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.beat_filter.get() == True:
+            msg = entry[9]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.purchase_filter.get() == True:
+            msg = entry[10]+"\n"
+            self.scr_print.insert("insert", msg)
+        if self.checkbox_filter.note_filter.get() == True:
+            msg = entry[11]+"\n"
+            self.scr_print.insert("insert", msg)
+            
+            
+    def submit_search(self):
+        self.scr_print.delete(0.0, "end")
+        for key in games.keys():
+            entry = games[key]
+            self.filter_print(entry)
+                
+                
 class CheckboxFilter(tk.Frame):
     def __init__(self, parent ):
         tk.Frame.__init__(self, master= parent)
         
-        
-        self.cbx_title = tk.Checkbutton(self, text = "Title")
+        self.title_filter = tk.BooleanVar()
+        self.title_filter.set(True)
+        self.cbx_title = tk.Checkbutton(self, text = "Title", variable = self.title_filter )
         self.cbx_title.grid(row = 0, column = 0, sticky = "nws")
         
-        self.cbx_genre = tk.Checkbutton(self, text = "Genre")
+        self.genre_filter = tk.BooleanVar()
+        self.genre_filter.set(True)        
+        self.cbx_genre = tk.Checkbutton(self, text = "Genre", variable = self.genre_filter )
         self.cbx_genre.grid(row = 1, column = 0, sticky = "nws") 
         
-        self.cbx_dev = tk.Checkbutton(self, text = "Developer")
+        self.dev_filter = tk.BooleanVar()
+        self.dev_filter.set(True)        
+        self.cbx_dev = tk.Checkbutton(self, text = "Developer", variable = self.dev_filter )
         self.cbx_dev.grid(row = 2, column = 0, sticky = "nws") 
         
-        self.cbx_pub = tk.Checkbutton(self, text = "Publisher")
+        self.pub_filter = tk.BooleanVar()
+        self.pub_filter.set(True)        
+        self.cbx_pub = tk.Checkbutton(self, text = "Publisher", variable = self.pub_filter )
         self.cbx_pub.grid(row = 3, column = 0, sticky = "nws") 
         
-        self.cbx_platform = tk.Checkbutton(self,text = "Platform")
+        self.platform_filter = tk.BooleanVar()
+        self.platform_filter.set(True)        
+        self.cbx_platform = tk.Checkbutton(self,text = "Platform", variable = self.platform_filter )
         self.cbx_platform.grid(row = 0, column = 1, sticky = "nws") 
         
-        self.cbx_date = tk.Checkbutton(self, text = "Release Date")
+        self.release_filter = tk.BooleanVar()
+        self.release_filter.set(True)        
+        self.cbx_date = tk.Checkbutton(self, text = "Release Date", variable = self.release_filter )
         self.cbx_date.grid(row = 1, column = 1, sticky = "nws")
         
-        self.cbx_rate = tk.Checkbutton(self, text = "Rating")
+        self.rate_filter = tk.BooleanVar()
+        self.rate_filter.set(True)        
+        self.cbx_rate = tk.Checkbutton(self, text = "Rating", variable = self.rate_filter )
         self.cbx_rate.grid(row = 2, column = 1, sticky = "nws" )
         
-        self.cbx_multi = tk.Checkbutton(self, text = "Single/Multi")
+        self.multi_filter = tk.BooleanVar()
+        self.multi_filter.set(True)        
+        self.cbx_multi = tk.Checkbutton(self, text = "Single/Multi", variable = self.multi_filter )
         self.cbx_multi.grid(row = 3, column = 1, sticky = "nws") 
         
-        self.cbx_price = tk.Checkbutton(self, text = "Price")
+        self.price_filter = tk.BooleanVar()
+        self.price_filter.set(True)        
+        self.cbx_price = tk.Checkbutton(self, text = "Price", variable = self.price_filter )
         self.cbx_price.grid(row = 0, column = 2, sticky = "nws") 
         
-        self.cbx_beat = tk.Checkbutton(self, text = "Beaten")
+        self.beat_filter = tk.BooleanVar()
+        self.beat_filter.set(True)        
+        self.cbx_beat = tk.Checkbutton(self, text = "Beaten", variable = self.beat_filter )
         self.cbx_beat.grid(row = 1, column = 2, sticky = "nws")         
         
-        self.cbx_beat = tk.Checkbutton(self, text = "Purchase Date")
-        self.cbx_beat.grid(row = 2, column = 2, sticky = "nws")            
+        self.purchase_filter = tk.BooleanVar()
+        self.purchase_filter.set(True)        
+        self.cbx_purchase = tk.Checkbutton(self, text = "Purchase Date", variable = self.purchase_filter )
+        self.cbx_purchase.grid(row = 2, column = 2, sticky = "nws")            
         
-        self.cbx_note = tk.Checkbutton(self, text = "Notes")
+        self.note_filter = tk.BooleanVar()
+        self.note_filter.set(True)        
+        self.cbx_note = tk.Checkbutton(self, text = "Notes", variable = self.note_filter )
         self.cbx_note.grid(row = 3, column = 2, sticky = "nws")        
         
 class RemoveScreen(Screen):
@@ -551,4 +648,3 @@ if __name__ == "__main__":
     screens[0].tkraise()
 
     root.mainloop()
-
