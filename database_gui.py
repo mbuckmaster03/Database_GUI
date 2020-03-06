@@ -248,7 +248,11 @@ class EditSelect(tk.Frame):
         Screen.current = 3
         
         if self.tkvar.get() == self.options[0]:
-            pass
+            popup = tk.Tk()
+            popup.title("*****")
+            msg = "ERROR, SELECT A TITLE!"
+            frm_error = PopMessage(popup, msg)
+            frm_error.grid(row = 0, column = 0)
         else:
             for i in range(len(self.options)):
                 if self.tkvar.get() == self.options[i]:
@@ -425,16 +429,19 @@ class SearchScreen(Screen):
 
         
         #Search By
-        self.lbl_srch_by = tk.Label(self,text = "Search By: ", font = BOTTOM_FONT)
-        self.lbl_srch_by.grid(row = 1, column = 0, sticky = "nws")  
-        self.ent_srch_by = tk.Entry(self)
-        self.ent_srch_by.grid(row = 2, column = 0, sticky = "ws")
+        self.lbl_search_by = tk.Label(self,text = "Search By: ", font = BOTTOM_FONT)
+        self.lbl_search_by.grid(row = 1, column = 0, sticky = "nws")  
+        self.options = ["All","Title","Genre","Developer","Publisher","Platform","Release Date","Single/Multi","Price","Beaten" ,"Purchase Date" ]
+        self.search_by_var = tk.StringVar(self)
+        self.search_by_var.set(self.options[0])        
+        self.dbx_search_by = tk.OptionMenu(self, self.search_by_var,*self.options)
+        self.dbx_search_by.grid(row=2,column=0, sticky = "ws")   
         
         #Search For
-        self.lbl_srch_for = tk.Label(self,text = "Search For: ", font = BOTTOM_FONT)
-        self.lbl_srch_for.grid(row = 3, column = 0, sticky = "nws")
-        self.ent_srch_for = tk.Entry(self)
-        self.ent_srch_for.grid(row = 4, column = 0, sticky = "nw") 
+        self.lbl_search_for = tk.Label(self,text = "Search For: ", font = BOTTOM_FONT)
+        self.lbl_search_for.grid(row = 3, column = 0, sticky = "nws")
+        self.ent_search_for = tk.Entry(self)
+        self.ent_search_for.grid(row = 4, column = 0, sticky = "nw") 
         
         #Scroll
         self.scr_print = ScrolledText(self,width=59,height=19)
@@ -449,7 +456,7 @@ class SearchScreen(Screen):
         self.btn_back.grid(row = 6, column = 0, sticky = "news")
         self.btn_clear = tk.Button(self,text = "Clear", font = BOTTOM_FONT,command=self.clear)
         self.btn_clear.grid(row = 6, column = 1, sticky = "news")
-        self.btn_submit = tk.Button(self,text = "Submit", font = BOTTOM_FONT,command=self.submit_search)
+        self.btn_submit = tk.Button(self,text = "Submit", font = BOTTOM_FONT,command=self.print_search)
         self.btn_submit.grid(row = 6, column = 2, sticky = "news") 
         
         for key in games.keys():
@@ -518,6 +525,47 @@ class SearchScreen(Screen):
         for key in games.keys():
             entry = games[key]
             self.filter_print(entry)
+            
+    def print_search(self):
+        self.scr_print.delete(0.0, "end")
+        keyword = self.ent_search_for.get()
+        for key in games.keys():
+            entry = games[key]
+            if self.search_by_var.get() == self.options[0]:
+                self.filter_print(entry)
+            if self.search_by_var.get() == self.options[1]:
+                if keyword in entry[0]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[2]:
+                if keyword in entry[1]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[3]:
+                if keyword in entry[2]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[4]:
+                if keyword in entry[3]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[5]:
+                if keyword in entry[4]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[6]:
+                if keyword in entry[5]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[7]:
+                if keyword in entry[6]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[8]:
+                if keyword in entry[7]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[9]:
+                if keyword in entry[8]:
+                    self.filter_print(entry)
+            if self.search_by_var.get() == self.options[10]:
+                if keyword in entry[9]:
+                    self.filter_print(entry)
+
+
+        
                 
                 
 class CheckboxFilter(tk.Frame):
@@ -618,15 +666,29 @@ class SaveScreen(Screen):
     def __init__(self):
         Screen.__init__(self)    
         
-        self.lbl_save = tk.Label(self,text = "Library Saved ", font = BOTTOM_FONT)
+        self.lbl_save = tk.Label(self,text = "Would you like to save the library? ", font = BOTTOM_FONT)
         self.lbl_save.grid(row = 0, column = 0)
         self.btn_save = tk.Button(self,text = "Ok", font = BOTTOM_FONT,command=self.go_back)
         self.btn_save.grid(row = 2, column = 0)          
        
     def go_back(self):
         Screen.current = 0
-        Screen.switch_frame()        
+        Screen.switch_frame()       
+    def save(self):
+        pass
        
+class PopMessage(tk.Frame):
+    def __init__(self, parent, msg = "generic"):
+        tk.Frame.__init__(self, master = parent)
+        self.parent = parent
+        
+        self.lbl_continue = tk.Label(self, text = msg)
+        self.lbl_continue.grid(row = 0, column = 0)
+        
+        self.btn_ok = tk.Button(self, text = "OK", command = self.parent.destroy)
+        self.btn_ok.grid(row = 1, column = 0)
+    
+
 #Main
 if __name__ == "__main__":
 
